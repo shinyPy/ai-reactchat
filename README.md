@@ -24,9 +24,7 @@ See [FEATURES.md](FEATURES.md) for details.
 
 ## Requirements
 
-* [Node.JS](https://nodejs.dev/en/)
-* [npm](https://www.npmjs.com/)
-* [OpenAI API Account](https://openai.com/blog/openai-api)
+* [Oxygen API Account](https://app.oxyapi.uk/)
   * Note: GPT-4 API access is currently accessible to those who have made at least [one successful payment](https://help.openai.com/en/articles/7102672-how-can-i-access-gpt-4) through the OpenAI developer platform.
 
 
