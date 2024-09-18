@@ -1,5 +1,4 @@
 import {OpenAIModel} from "../models/model";
-import {OPENAI_API_KEY} from "../config";
 import {CustomError} from "./CustomError";
 import {MODELS_ENDPOINT, TTS_ENDPOINT} from "../constants/apiEndpoints";
 import {SpeechSettings} from "../models/SpeechSettings"; // Adjust the path as necessary
@@ -7,11 +6,11 @@ import {SpeechSettings} from "../models/SpeechSettings"; // Adjust the path as n
 export class SpeechService {
   private static models: Promise<OpenAIModel[]> | null = null;
 
-  static async textToSpeech(text: string, settings: SpeechSettings): Promise<string> {
+  static async textToSpeech(apiKey: string, text: string, settings: SpeechSettings): Promise<string> {
     const endpoint = TTS_ENDPOINT;
     const headers = {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Authorization": `Bearer ${apiKey}`,
     };
 
     if (text.length > 4096) {
@@ -45,11 +44,11 @@ export class SpeechService {
     return URL.createObjectURL(blob);
   }
 
-  static getModels = (): Promise<OpenAIModel[]> => {
-    return SpeechService.fetchModels();
+  static getModels = (apiKey: string): Promise<OpenAIModel[]> => {
+    return SpeechService.fetchModels(apiKey);
   };
 
-  static async fetchModels(): Promise<OpenAIModel[]> {
+  static async fetchModels(apiKey: string): Promise<OpenAIModel[]> {
     if (this.models !== null) {
       return this.models;
     }
@@ -57,7 +56,7 @@ export class SpeechService {
     try {
       const response = await fetch(MODELS_ENDPOINT, {
         headers: {
-          "Authorization": `Bearer ${OPENAI_API_KEY}`,
+          "Authorization": `Bearer ${apiKey}`,
         },
       });
 

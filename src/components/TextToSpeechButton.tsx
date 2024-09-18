@@ -47,28 +47,28 @@ const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({content}) => {
     return content;
   };
 
-
   const fetchAudio = async () => {
     if (currentIdentifier !== lastIdentifier) {
-    setIsLoading(true);
-    try {
-      const processedContent = preprocessContent(content);
-      const url = await SpeechService.textToSpeech(processedContent, speechSettings);
+      setIsLoading(true);
+      try {
+        const processedContent = preprocessContent(content);
+        // Pass the apiKey from userSettings
+        const url = await SpeechService.textToSpeech(userSettings.apiKey!, processedContent, speechSettings);
         audioRef.current.src = url;
-      setAudioUrl(url);
+        setAudioUrl(url);
         setLastIdentifier(currentIdentifier);
 
         audioRef.current.onloadeddata = () => {
-      audioRef.current.play();
-      setIsPlaying(true);
+          audioRef.current.play();
+          setIsPlaying(true);
         };
-    } catch (error) {
-      console.error('Error fetching audio:', error);
-    } finally {
-      setIsLoading(false);
-    }
+      } catch (error) {
+        console.error('Error fetching audio:', error);
+      } finally {
+        setIsLoading(false);
+      }
     } else if (audioUrl) {
-        audioRef.current.play();
+      audioRef.current.play();
       setIsPlaying(true);
     }
   };
