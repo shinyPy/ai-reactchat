@@ -25,7 +25,6 @@ See [FEATURES.md](FEATURES.md) for details.
 ## Requirements
 
 * [Oxygen API Account](https://app.oxyapi.uk/)
-  * Note: GPT-4 API access is currently accessible to those who have made at least [one successful payment](https://help.openai.com/en/articles/7102672-how-can-i-access-gpt-4) through the OpenAI developer platform.
 
 
 ## Setup
