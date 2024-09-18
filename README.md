@@ -32,7 +32,7 @@ See [FEATURES.md](FEATURES.md) for details.
 
 ## Setup
 
-1. Go to the website [http://localhost:3000/]( https://openai-api-chat-teal.vercel.app/)
+1. Go to the [website]( https://openai-api-chat-teal.vercel.app/)
 2. Settings and then put your API Key in the general tab, it is saved in localStorage.
 3. enjoy chatting 
 
