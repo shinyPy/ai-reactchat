@@ -33,10 +33,9 @@ const Chat: React.FC<Props> = ({
   const chatDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Use apiKey from userSettings when fetching models
     const apiKey = userSettings.apiKey;
     if (apiKey) {
-      ChatService.getModels() // Pass apiKey to the service
+      ChatService.getModels(apiKey)  // Pass apiKey to the service
         .then(models => {
           setModels(models);
         })
@@ -44,7 +43,7 @@ const Chat: React.FC<Props> = ({
           NotificationService.handleUnexpectedError(err, 'Failed to get list of models');
         });
     }
-  }, [userSettings.apiKey]); // Re-fetch models if apiKey changes
+  }, [userSettings.apiKey]); // Re-fetch models if apiKey changesRe-fetch models if apiKey changes
 
   useEffect(() => {
     if (chatDivRef.current && allowAutoScroll) {

@@ -13,7 +13,7 @@ export class ChatService {
   private static abortController: AbortController | null = null;
 
   static async mapChatMessagesToCompletionMessages(apiKey: string, modelId: string, messages: ChatMessage[]): Promise<ChatCompletionMessage[]> {
-    const model = await this.getModelById(modelId);
+    const model = await this.getModelById(apiKey, modelId);
     if (!model) {
       throw new Error(`Model with ID '${modelId}' not found`);
     }
@@ -51,7 +51,6 @@ export class ChatService {
     messages: ChatMessage[],
     callback: (content: string, fileDataRef: FileDataRef[]) => void
   ): Promise<void> {
-    const debouncedCallback = this.debounce(callback, CHAT_STREAM_DEBOUNCE_TIME);
     this.abortController = new AbortController();
 
     const requestBody: ChatCompletionRequest = {
@@ -84,7 +83,6 @@ export class ChatService {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
-      let accumulatedContent = '';
 
       while (true) {
         const { done, value } = await reader.read();
@@ -97,15 +95,11 @@ export class ChatService {
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6);
-            if (data === '[DONE]') {
-              debouncedCallback(accumulatedContent, []);
-              return;
-            }
+            if (data === '[DONE]') return;
             try {
               const parsed = JSON.parse(data);
               const content = parsed.choices[0]?.delta?.content || '';
-              accumulatedContent += content;
-              debouncedCallback(accumulatedContent, []);
+              if (content) callback(content, []);
             } catch (error) {
               console.error('Error parsing JSON:', error);
             }
@@ -117,10 +111,10 @@ export class ChatService {
         if (error.name === 'AbortError') {
           console.log('Stream aborted');
         } else {
-          NotificationService.handleUnexpectedError(error, 'Error reading streamed response.');
+          throw error;
         }
       } else {
-        console.error('An unexpected error occurred', error);
+        throw new Error('An unexpected error occurred');
       }
     }
   }
@@ -130,13 +124,13 @@ export class ChatService {
     this.abortController = null;
   }
 
-  static getModels(): Promise<OpenAIModel[]> {
-    return this.fetchModels();
+  static async getModels(apiKey: string): Promise<OpenAIModel[]> {
+    return this.fetchModels(apiKey);
   }
 
-  static async getModelById(modelId: string): Promise<OpenAIModel | null> {
+  static async getModelById(apiKey: string, modelId: string): Promise<OpenAIModel | null> {
     try {
-      const models = await this.getModels();
+      const models = await this.getModels(apiKey);
       const foundModel = models.find(model => model.id === modelId);
       if (!foundModel) {
         throw new CustomError(`Model with ID '${modelId}' not found.`, {
@@ -161,7 +155,7 @@ export class ChatService {
     }
   }
 
-  static async fetchModels(): Promise<OpenAIModel[]> {
+  static async fetchModels(apiKey: string): Promise<OpenAIModel[]> {
     if (this.models !== null) {
       return this.models;
     }
@@ -169,7 +163,7 @@ export class ChatService {
     try {
       const response = await fetch(MODELS_ENDPOINT, {
         headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
         },
       });
 

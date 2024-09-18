@@ -114,9 +114,9 @@ const ModelSelect: React.FC<ModelSelectProps> = ({
   useEffect(() => {
     if (externalModels.length > 0) {
       setModels(externalModels);
-    } else {
+    } else if (userSettings.apiKey) {
       setLoading(true);
-      ChatService.getModels()
+      ChatService.getModels(userSettings.apiKey)
         .then(data => {
           setModels(data);
         })
@@ -125,7 +125,7 @@ const ModelSelect: React.FC<ModelSelectProps> = ({
         })
         .finally(() => setLoading(false));
     }
-  }, [externalModels]);
+  }, [externalModels, userSettings.apiKey]);
 
   function getModelOption(model: OpenAIModel) {
     return {

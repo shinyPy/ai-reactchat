@@ -147,7 +147,7 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
       if (apiKey === null) {
         throw new Error('API key is not set');
       }
-      const fetchedModel = await ChatService.getModelById( modelId);
+      const fetchedModel = await ChatService.getModelById(apiKey, modelId);  // Pass both apiKey and modelId
       return fetchedModel;
     } catch (error) {
       console.error('Failed to fetch model:', error);
@@ -330,59 +330,43 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
     let effectiveSettings = getEffectiveChatSettings();
 
     ChatService.sendMessageStreamed(userSettings.apiKey!, effectiveSettings, messages, handleStreamedResponse)
-    .then((response: ChatCompletion) => {
-        // nop
+      .then(() => {
+        // Stream completed successfully
+        console.log('Stream completed');
       })
       .catch(err => {
-          if (err instanceof CustomError) {
-            const message: string = err.message;
-            setLoading(false);
-            addMessage(Role.Assistant, MessageType.Error, message, []);
-          } else {
-            NotificationService.handleUnexpectedError(err, 'Failed to send message to openai.');
-          }
+        if (err instanceof CustomError) {
+          const message: string = err.message;
+          addMessage(Role.Assistant, MessageType.Error, message, []);
+        } else {
+          NotificationService.handleUnexpectedError(err, 'Failed to send message to openai.');
         }
-      ).finally(() => {
-      setLoading(false); // Stop loading here, whether successful or not
-    });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   function handleStreamedResponse(content: string, fileDataRef: FileDataRef[]) {
     setMessages(prevMessages => {
-      let isNew: boolean = false;
-      try {
-        // todo: this shouldn't be necessary
-        if (prevMessages.length == 0) {
-          console.error('prevMessages should not be empty in handleStreamedResponse.');
-          return [];
-        }
-        if ((prevMessages[prevMessages.length - 1].role == Role.User)) {
-          isNew = true;
-        }
-      } catch (e) {
-        console.error('Error getting the role')
-        console.error('prevMessages = ' + JSON.stringify(prevMessages));
-        console.error(e);
-      }
-
-      if (isNew) {
-        const message: ChatMessage = {
+      const lastMessage = prevMessages[prevMessages.length - 1];
+      if (lastMessage.role === Role.User) {
+        // New message from assistant
+        return [...prevMessages, {
           id: prevMessages.length + 1,
           role: Role.Assistant,
           messageType: MessageType.Normal,
           content: content,
           fileDataRef: fileDataRef,
-        };
-        return [...prevMessages, message];
+        }];
       } else {
-        // Clone the last message and update its content
-        const updatedMessage = {
-          ...prevMessages[prevMessages.length - 1],
-          content: prevMessages[prevMessages.length - 1].content + content
+        // Update existing assistant message
+        const updatedMessages = [...prevMessages];
+        updatedMessages[updatedMessages.length - 1] = {
+          ...lastMessage,
+          content: lastMessage.content + content
         };
-
-        // Replace the old last message with the updated one
-        return [...prevMessages.slice(0, -1), updatedMessage];
+        return updatedMessages;
       }
     });
   }
