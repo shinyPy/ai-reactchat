@@ -91,7 +91,6 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({isVisible, onClose
     onClose();
   };
 
-
   useEffect(() => {
     const closeModalOnOutsideClick = (event: MouseEvent) => {
       if (!isOpen && dialogRef.current && !dialogRef.current.contains(event.target as Node)) {
@@ -223,6 +222,21 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({isVisible, onClose
                             }}
                         />
                       </div>
+                      <div className="flex items-center justify-between setting-panel">
+                        <label htmlFor="apiKey">{t('API KEY HERE')}</label>
+                        <input
+                          type="text"
+                          id="apiKey"
+                          name="apiKey"
+                          value={userSettings.apiKey || ''}
+                          onChange={(e) => setUserSettings({
+                            ...userSettings,
+                            apiKey: e.target.value
+                          })}
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        />
+                      </div>
+                      <p>We do not store your API key. It is used to authenticate your requests to the OpenAI API.</p>
                     </div>
                   </div>
                   <div
@@ -290,7 +304,6 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({isVisible, onClose
                               ...userSettings,
                               speechSpeed: value
                             })}
-
                         />
                       </div>
                       <div className="setting-panel">

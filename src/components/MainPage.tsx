@@ -26,7 +26,7 @@ import CustomChatSplash from './CustomChatSplash';
 import {FileDataRef} from '../models/FileData';
 import {OpenAIModel} from '../models/model';
 import {ArrowUturnDownIcon} from '@heroicons/react/24/outline';
-
+import { OPENAI_API_KEY } from '../config';
 function getFirstValidString(...args: (string | undefined | null)[]): string {
   for (const arg of args) {
     if (arg !== null && arg !== undefined && arg.trim() !== '') {
@@ -143,7 +143,11 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
 
   const fetchModelById = async (modelId: string): Promise<OpenAIModel | null> => {
     try {
-      const fetchedModel = await ChatService.getModelById(modelId);
+      const apiKey = userSettings.apiKey;
+      if (apiKey === null) {
+        throw new Error('API key is not set');
+      }
+      const fetchedModel = await ChatService.getModelById( modelId);
       return fetchedModel;
     } catch (error) {
       console.error('Failed to fetch model:', error);
@@ -325,8 +329,8 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
 
     let effectiveSettings = getEffectiveChatSettings();
 
-    ChatService.sendMessageStreamed(effectiveSettings, messages, handleStreamedResponse)
-      .then((response: ChatCompletion) => {
+    ChatService.sendMessageStreamed(userSettings.apiKey!, effectiveSettings, messages, handleStreamedResponse)
+    .then((response: ChatCompletion) => {
         // nop
       })
       .catch(err => {

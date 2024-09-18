@@ -27,21 +27,24 @@ const Chat: React.FC<Props> = ({
                                  chatBlocks, onChatScroll, allowAutoScroll, model,
                                  onModelChange, conversation, loading
                                }) => {
-  const {userSettings, setUserSettings} = useContext(UserContext);
+  const {userSettings, setUserSettings} = useContext(UserContext); // Access userSettings
   const {t} = useTranslation();
   const [models, setModels] = useState<OpenAIModel[]>([]);
   const chatDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ChatService.getModels()
+    // Use apiKey from userSettings when fetching models
+    const apiKey = userSettings.apiKey;
+    if (apiKey) {
+      ChatService.getModels() // Pass apiKey to the service
         .then(models => {
           setModels(models);
         })
         .catch(err => {
           NotificationService.handleUnexpectedError(err, 'Failed to get list of models');
         });
-
-  }, []);
+    }
+  }, [userSettings.apiKey]); // Re-fetch models if apiKey changes
 
   useEffect(() => {
     if (chatDivRef.current && allowAutoScroll) {
