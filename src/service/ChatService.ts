@@ -12,28 +12,33 @@ export class ChatService {
   private static models: Promise<OpenAIModel[]> | null = null;
   private static abortController: AbortController | null = null;
 
-  static async mapChatMessagesToCompletionMessages(apiKey: string, modelId: string, messages: ChatMessage[]): Promise<ChatCompletionMessage[]> {
+  static async mapChatMessagesToCompletionMessages(
+    apiKey: string,
+    modelId: string,
+    messages: ChatMessage[]
+  ): Promise<ChatCompletionMessage[]> {
     const model = await this.getModelById(apiKey, modelId);
     if (!model) {
       throw new Error(`Model with ID '${modelId}' not found`);
     }
 
     return messages.map((message) => {
-      const contentParts: ChatMessagePart[] = [{ type: 'text', text: message.content }];
+      let content: ChatMessagePart[] = [{ type: 'text', text: message.content }];
 
       if (model.image_support && message.fileDataRef) {
-        message.fileDataRef.forEach((fileRef) => {
-          const fileUrl = fileRef.fileData?.data;
-          if (fileUrl) {
-            const fileType = fileRef.fileData!.type.startsWith('image') ? 'image_url' : fileRef.fileData!.type;
-            contentParts.push({
-              type: fileType,
-              image_url: { url: fileUrl }
-            });
-          }
-        });
+        const imageParts = message.fileDataRef
+          .filter((fileRef) => fileRef.fileData?.type.startsWith('image'))
+          .map((fileRef) => ({
+            type: 'image_url',
+            image_url: { url: fileRef.fileData!.data as string }
+          }));
+
+        if (imageParts.length > 0) {
+          content = [{ type: 'text', text: message.content }, ...imageParts];
+        }
       }
-      return { role: message.role, content: contentParts };
+
+      return { role: message.role, content };
     });
   }
 
@@ -55,11 +60,15 @@ export class ChatService {
 
     const requestBody: ChatCompletionRequest = {
       model: chatSettings.model ?? DEFAULT_MODEL,
-      messages: await this.mapChatMessagesToCompletionMessages(apiKey, chatSettings.model ?? DEFAULT_MODEL, messages),
+      messages: await this.mapChatMessagesToCompletionMessages(
+        apiKey,
+        chatSettings.model ?? DEFAULT_MODEL,
+        messages
+      ),
       stream: true,
-      temperature: chatSettings.temperature,
-      top_p: chatSettings.top_p,
-      seed: chatSettings.seed,
+      temperature: chatSettings.temperature ?? undefined,
+      top_p: chatSettings.top_p ?? undefined,
+      seed: chatSettings.seed ?? undefined,
     };
 
     try {

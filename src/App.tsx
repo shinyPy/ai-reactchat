@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import {I18nextProvider} from 'react-i18next';
 import i18n from './i18n';
-import Sidebar from "./components/SideBar";
-import MainPage from "./components/MainPage";
+import Sidebar from "./components/core/SideBar";
+import MainPage from "./components/core/MainPage";
 import './App.css';
 import {ToastContainer} from "react-toastify";
-import ExploreCustomChats from "./components/ExploreCustomChats";
-import CustomChatEditor from './components/CustomChatEditor';
+import ExploreCustomChats from "./components/chat-related/ExploreCustomChats";
+import CustomChatEditor from './components/chat-related/CustomChatEditor';
 
 const App = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
