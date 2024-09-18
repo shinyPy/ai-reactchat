@@ -225,7 +225,7 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({isVisible, onClose
                       <div className="flex items-center justify-between setting-panel">
                         <label htmlFor="apiKey">{t('API KEY HERE')}</label>
                         <input
-                          type="text"
+                          type="password"
                           id="apiKey"
                           name="apiKey"
                           value={userSettings.apiKey || ''}
