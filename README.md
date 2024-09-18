@@ -1,6 +1,12 @@
 # OpenAI React Chat Web Application
 <!-- markdown-link-check-disable -->
 This project provides a web frontend for the OpenAI chat API. This project is for developers or advanced users that are familiar with [OpenAI ChatGPT](https://chat.openai.com/) but want to customize the web interface.
+
+Hosted and edited to use localStorage api keys instead of env if you're too lazy to run it on your computer
+also currently using [oxyapi](https://app.oxyapi.uk/)
+
+### Future plan
+Support custom headers and endpoints
 ## Goals
 * Provide the same features as [OpenAI ChatGPT](https://chat.openai.com/) and <!-- markdown-link-check-enable -->
 [OpenAI Playground](https://platform.openai.com/playground?mode=chat).
