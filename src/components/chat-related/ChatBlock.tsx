@@ -10,9 +10,10 @@ interface Props {
   block: ChatMessage;
   loading: boolean;
   isLastBlock: boolean;
+  onContentChange: (newContent: string) => void; // New prop for content change
 }
 
-const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock}) => {
+const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock, onContentChange}) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editedBlockContent, setEditedBlockContent] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
@@ -27,17 +28,12 @@ const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock}) => {
     padding: '10px'
   } : {};
 
-
   useEffect(() => {
     if (isEdit) {
       textareaRef.current?.focus();
       textareaRef.current?.setSelectionRange(0, 0);
     }
   }, [isEdit]);
-
-
-  const handleRegenerate = () => {
-  }
 
   const handleEdit = () => {
     if (contentRef.current) {
@@ -46,8 +42,9 @@ const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock}) => {
     setIsEdit(true);
     setEditedBlockContent(block.content);
   }
+
   const handleEditSave = () => {
-    // todo: notify main to change content block
+    onContentChange(editedBlockContent); // Notify parent with new content
     setIsEdit(false);
   }
 
@@ -76,8 +73,7 @@ const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock}) => {
       <div key={`chat-block-${block.id}`}
            className={`group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50
             ${block.role === 'assistant' ? 'bg-custom-gray dark:bg-gray-900' : 'bg-white dark:bg-gray-850'}`}>
-        <div
-            className="text-base md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl 3xl:max-w-6xl 4xl:max-w7xl p-2 flex lg:px-0 m-auto flex-col">
+        <div className="text-base md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl 3xl:max-w-6xl 4xl:max-w7xl p-2 flex lg:px-0 m-auto flex-col">
           <div className="w-full flex">
             <div className="w-[30px] flex flex-col relative items-end mr-4">
               <div className="relative flex h-[30px] w-[30px] p-0 rounded-sm items-center justify-center">
@@ -89,10 +85,8 @@ const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock}) => {
               </div>
             </div>
             <div className="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-full">
-              <div id={`message-block-${block.id}`} className="flex flex-grow flex-col gap-3"
-                   style={errorStyles}>
-                <div
-                    className="min-h-[20px] flex flex-col items-start gap-4">
+              <div id={`message-block-${block.id}`} className="flex flex-grow flex-col gap-3" style={errorStyles}>
+                <div className="min-h-[20px] flex flex-col items-start gap-4">
                   {isEdit ? (
                           <textarea
                               spellCheck={false}
@@ -106,16 +100,13 @@ const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock}) => {
                           ></textarea>
                       )
                       : (
-                          <div ref={contentRef}
-                               className="markdown prose w-full break-words dark:prose-invert light">
+                          <div ref={contentRef} className="markdown prose w-full break-words dark:prose-invert light">
                             {block.role === 'user' ? (
                                 <UserContentBlock text={block.content} fileDataRef={(block.fileDataRef) ? block.fileDataRef : []}/>
                             ) : (
-                                <MarkdownBlock markdown={block.content} role={block.role}
-                                               loading={loading}/>
+                                <MarkdownBlock markdown={block.content} role={block.role} loading={loading}/>
                             )}
                           </div>)}
-
                 </div>
               </div>
             </div>
@@ -128,18 +119,6 @@ const ChatBlock: React.FC<Props> = ({block, loading, isLastBlock}) => {
                 <div className="copy-button">
                   <CopyButton mode={CopyButtonMode.Compact} text={block.content}/>
                 </div>
-                {/*          {block.role === 'assistant' && (
-                    <div className="regenerate-button text-gray-400 visible">
-                        <button className="flex gap-2" onClick={handleRegenerate}>
-                            <ArrowPathRoundedSquareIcon {...iconProps}/>
-                        </button>
-                    </div>
-                  )}
-                  <div className="regenerate-button text-gray-400 visible">
-                      <button className="flex gap-2" onClick={handleEdit}>
-                          <PencilSquareIcon {...iconProps}/>
-                      </button>
-                  </div>*/}
               </div>
           )}
         </div>

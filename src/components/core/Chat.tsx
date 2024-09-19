@@ -136,9 +136,11 @@ const Chat: React.FC<Props> = ({
         </div>
         {chatBlocks.map((block, index) => (
           <ChatBlock key={`chat-block-${block.id}`}
-            block={block}
-            loading={index === chatBlocks.length - 1 && loading}
-            isLastBlock={index === chatBlocks.length - 1} />
+          block={block}
+          loading={index === chatBlocks.length - 1 && loading}
+          isLastBlock={index === chatBlocks.length - 1} onContentChange={function (newContent: string): void {
+            throw new Error('Function not implemented.');
+          } } />
         ))}
         <div className="w-full h-24 flex-shrink-0"></div>
       </div>
