@@ -1,14 +1,14 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {ChatService} from "../../service/ChatService";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { ChatService } from "../../service/ChatService";
 import Chat from "./Chat";
-import {ChatCompletion, ChatMessage, MessageType, Role} from "../../models/ChatCompletion";
-import {ScrollToBottomButton} from "../chat-related/ScrollToBottomButton";
-import {OPENAI_DEFAULT_SYSTEM_PROMPT} from "../../config";
-import {CustomError} from "../../service/CustomError";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {useTranslation} from 'react-i18next';
+import { ChatCompletion, ChatMessage, MessageType, Role } from "../../models/ChatCompletion";
+import { ScrollToBottomButton } from "../chat-related/ScrollToBottomButton";
+import { OPENAI_DEFAULT_SYSTEM_PROMPT } from "../../config";
+import { CustomError } from "../../service/CustomError";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom/client';
-import MessageBox, {MessageBoxHandles} from "../chat-related/MessageBox";
+import MessageBox, { MessageBoxHandles } from "../chat-related/MessageBox";
 import {
   CONVERSATION_NOT_FOUND,
   DEFAULT_INSTRUCTIONS,
@@ -16,17 +16,17 @@ import {
   MAX_TITLE_LENGTH,
   SNIPPET_MARKERS
 } from "../../constants/appConstants";
-import {ChatSettings} from '../../models/ChatSettings';
-import chatSettingsDB, {chatSettingsEmitter, updateShowInSidebar} from '../../service/ChatSettingsDB';
+import { ChatSettings } from '../../models/ChatSettings';
+import chatSettingsDB, { chatSettingsEmitter, updateShowInSidebar } from '../../service/ChatSettingsDB';
 import ChatSettingDropdownMenu from "../chat-related/ChatSettingDropdownMenu";
-import ConversationService, {Conversation} from '../../service/ConversationService';
-import {UserContext} from '../../UserContext';
-import {NotificationService} from '../../service/NotificationService';
+import ConversationService, { Conversation } from '../../service/ConversationService';
+import { UserContext } from '../../UserContext';
+import { NotificationService } from '../../service/NotificationService';
 import CustomChatSplash from '../chat-related/CustomChatSplash';
-import {FileDataRef} from '../../models/FileData';
-import {OpenAIModel} from '../../models/model';
-import {ArrowUturnDownIcon} from '@heroicons/react/24/outline';
-// import { OPENAI_API_KEY } from '../../config';
+import { FileDataRef } from '../../models/FileData';
+import { OpenAIModel } from '../../models/model';
+import { ArrowUturnDownIcon } from '@heroicons/react/24/outline';
+
 function getFirstValidString(...args: (string | undefined | null)[]): string {
   for (const arg of args) {
     if (arg !== null && arg !== undefined && arg.trim() !== '') {
@@ -42,14 +42,14 @@ interface MainPageProps {
   toggleSidebarCollapse: () => void;
 }
 
-const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggleSidebarCollapse}) => {
-  const {userSettings, setUserSettings} = useContext(UserContext);
-  const {t} = useTranslation();
+const MainPage: React.FC<MainPageProps> = ({ className, isSidebarCollapsed, toggleSidebarCollapse }) => {
+  const { userSettings } = useContext(UserContext);
+  const { t } = useTranslation();
   const [chatSettings, setChatSettings] = useState<ChatSettings | undefined>(undefined);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [model, setModel] = useState<OpenAIModel | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const {id, gid} = useParams<{ id?: string, gid?: string }>();
+  const { id, gid } = useParams<{ id?: string, gid?: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -112,7 +112,6 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
       setConversation(null);
     }
     if (conversation && conversation.id) {
-      // Only update if there are messages
       if (messages.length > 0) {
         ConversationService.updateConversation(conversation, messages);
       }
@@ -147,7 +146,7 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
       if (apiKey === null) {
         throw new Error('API key is not set');
       }
-      const fetchedModel = await ChatService.getModelById(apiKey, modelId);  // Pass both apiKey and modelId
+      const fetchedModel = await ChatService.getModelById(apiKey, modelId, userSettings.openaiEndpoint);
       return fetchedModel;
     } catch (error) {
       console.error('Failed to fetch model:', error);
@@ -157,7 +156,6 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
       return null;
     }
   };
-
 
   const chatSettingsListener = (data: { gid?: number }) => {
     const currentChatSettings = chatSettingsRef.current;
@@ -194,7 +192,8 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
     clearInputArea();
     setMessages([]);
     messageBoxRef.current?.focusTextarea();
-  }
+  };
+
   const handleSelectedConversation = (id: string | null) => {
     if (id && id.length > 0) {
       let n = Number(id);
@@ -205,8 +204,6 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
             clearInputArea();
             ConversationService.getChatMessages(conversation).then((messages: ChatMessage[]) => {
                 if (messages.length == 0) {
-                  // Race condition: the navigate to /c/id and the updating of the messages state
-                  // are happening at the same time.
                   console.warn('possible state problem');
                 } else {
                   setMessages(messages);
@@ -223,13 +220,12 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
       newConversation();
     }
     setAllowAutoScroll(true);
-    setShowScrollButton(false)
+    setShowScrollButton(false);
     messageBoxRef.current?.focusTextarea();
-  }
-
+  };
 
   function getTitle(message: string): string {
-    let title = message.trimStart(); // Remove leading newlines
+    let title = message.trimStart();
     let firstNewLineIndex = title.indexOf('\n');
     if (firstNewLineIndex === -1) {
       firstNewLineIndex = title.length;
@@ -275,10 +271,9 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
     }
     setAllowAutoScroll(true);
     addMessage(Role.User, MessageType.Normal, message, fileDataRef, sendMessage);
-  }
+  };
 
   const addMessage = (role: Role, messageType: MessageType, message: string, fileDataRef: FileDataRef[], callback?: (callback: ChatMessage[]) => void) => {
-
     let content: string = message;
 
     setMessages((prevMessages: ChatMessage[]) => {
@@ -313,7 +308,7 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
         author: 'system',
         name: 'default',
         model: model?.id || DEFAULT_MODEL
-      }
+      };
     }
     return effectiveSettings;
   }
@@ -329,9 +324,8 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
 
     let effectiveSettings = getEffectiveChatSettings();
 
-    ChatService.sendMessageStreamed(userSettings.apiKey!, effectiveSettings, messages, handleStreamedResponse)
+    ChatService.sendMessageStreamed(userSettings.apiKey!, effectiveSettings, messages, handleStreamedResponse, userSettings.openaiEndpoint)
       .then(() => {
-        // Stream completed successfully
         console.log('Stream completed');
       })
       .catch(err => {
@@ -351,7 +345,6 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
     setMessages(prevMessages => {
       const lastMessage = prevMessages[prevMessages.length - 1];
       if (lastMessage.role === Role.User) {
-        // New message from assistant
         return [...prevMessages, {
           id: prevMessages.length + 1,
           role: Role.Assistant,
@@ -360,7 +353,6 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
           fileDataRef: fileDataRef,
         }];
       } else {
-        // Update existing assistant message
         const updatedMessages = [...prevMessages];
         updatedMessages[updatedMessages.length - 1] = {
           ...lastMessage,
@@ -402,10 +394,9 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
     iconContainer.className = 'h-5 w-5';
 
     const root = ReactDOM.createRoot(iconContainer);
-    root.render(<ArrowUturnDownIcon/>);
+    root.render(<ArrowUturnDownIcon />);
 
     button.appendChild(iconContainer);
-    // Stop propagation for mousedown and mouseup to avoid affecting other event listeners
     button.addEventListener('mousedown', event => event.stopPropagation());
     button.addEventListener('mouseup', event => event.stopPropagation());
     button.addEventListener('click', handleQuoteSelectedText);
@@ -428,13 +419,12 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
 
-      // Remove the existing button if it exists
       if (buttonRef.current && buttonRef.current.parentNode) {
         buttonRef.current.parentNode.removeChild(buttonRef.current);
       }
 
       const newButton = createButton();
-      const buttonHeight = 30; // Approximate height of the button
+      const buttonHeight = 30;
       const buttonWidth = newButton.offsetWidth;
 
       const chatContainer = document.getElementById('chat-container1');
@@ -442,8 +432,8 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
         const containerRect = chatContainer.getBoundingClientRect();
 
         newButton.style.position = 'absolute';
-        newButton.style.left = `${rect.left - containerRect.left + (rect.width / 2) - (buttonWidth / 2)}px`; // Center horizontally relative to container
-        newButton.style.top = `${rect.top - containerRect.top - buttonHeight}px`; // Position above the selection relative to container
+        newButton.style.left = `${rect.left - containerRect.left + (rect.width / 2) - (buttonWidth / 2)}px`;
+        newButton.style.top = `${rect.top - containerRect.top - buttonHeight}px`;
         newButton.style.display = 'inline-block';
         newButton.style.verticalAlign = 'middle';
         newButton.style.zIndex = '1000';
@@ -474,24 +464,21 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
           {gid ? (
             <div
               className={`inline-block absolute top-0 left-0 z-50 ${isSidebarCollapsed ? 'sidebar-collapsed-margin' : 'sidebar-expanded-margin'}`}>
-              <ChatSettingDropdownMenu chatSetting={chatSettings}/>
+              <ChatSettingDropdownMenu chatSetting={chatSettings} />
             </div>
           ) : null
           }
           {!conversation && chatSettings ? (
-            <CustomChatSplash className=" -translate-y-[10%] " chatSettings={chatSettings}/>
+            <CustomChatSplash className=" -translate-y-[10%] " chatSettings={chatSettings} />
           ) : null}
           <Chat chatBlocks={messages} onChatScroll={handleUserScroll} conversation={conversation}
-                model={model?.id || DEFAULT_MODEL}
-                onModelChange={handleModelChange} allowAutoScroll={allowAutoScroll} loading={loading}/>
-          {/*</div>*/}
-          {/* Absolute container for the ScrollToBottomButton */}
+            model={model?.id || DEFAULT_MODEL}
+            onModelChange={handleModelChange} allowAutoScroll={allowAutoScroll} loading={loading} />
           {showScrollButton && (
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-10 z-10">
-              <ScrollToBottomButton onClick={scrollToBottom}/>
+              <ScrollToBottomButton onClick={scrollToBottom} />
             </div>
           )}
-          {/* MessageBox remains at the bottom */}
           <MessageBox
             ref={messageBoxRef}
             callApp={callApp}
@@ -506,4 +493,3 @@ const MainPage: React.FC<MainPageProps> = ({className, isSidebarCollapsed, toggl
 }
 
 export default MainPage;
-

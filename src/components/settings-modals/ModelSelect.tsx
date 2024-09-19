@@ -116,7 +116,7 @@ const ModelSelect: React.FC<ModelSelectProps> = ({
       setModels(externalModels);
     } else if (userSettings.apiKey) {
       setLoading(true);
-      ChatService.getModels(userSettings.apiKey)
+      ChatService.getModels(userSettings.apiKey, userSettings.openaiEndpoint)
         .then(data => {
           setModels(data);
         })

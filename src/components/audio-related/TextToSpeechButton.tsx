@@ -1,13 +1,15 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {SpeakerWaveIcon, StopCircleIcon} from '@heroicons/react/24/outline';
-import {SpeechSettings} from '../../models/SpeechSettings';
-import {SpeechService} from '../../service/SpeechService';
-import {RotatingLines} from 'react-loader-spinner';
-import {UserContext} from '../../UserContext';
-import {iconProps} from "../../svg";
-import {useTranslation} from "react-i18next";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { SpeakerWaveIcon, StopCircleIcon } from '@heroicons/react/24/outline';
+import { SpeechSettings } from '../../models/SpeechSettings';
+import { SpeechService } from '../../service/SpeechService';
+import { RotatingLines } from 'react-loader-spinner';
+import { UserContext } from '../../UserContext';
+import { iconProps } from "../../svg";
+import { useTranslation } from "react-i18next";
 import "../css/Button.css";
 import Tooltip from '../ui-elements/Tooltip';
+import { NotificationService } from '../../service/NotificationService';
+import { CustomError } from '../../service/CustomError';
 
 interface TextToSpeechButtonProps {
   content: string;
@@ -25,14 +27,14 @@ const generateIdentifier = (content: string, settings: SpeechSettings) => {
   return `${simpleChecksum(content)}-${settings.id}-${settings.voice}-${settings.speed}`;
 };
 
-const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({content}) => {
-  const {t} = useTranslation();
+const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({ content }) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState('');
   const [lastIdentifier, setLastIdentifier] = useState('');
   const audioRef = useRef(new Audio());
-  const {userSettings} = useContext(UserContext);
+  const { userSettings } = useContext(UserContext);
 
   const speechSettings: SpeechSettings = {
     id: userSettings.speechModel || 'tts-1',
@@ -52,8 +54,8 @@ const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({content}) => {
       setIsLoading(true);
       try {
         const processedContent = preprocessContent(content);
-        // Pass the apiKey from userSettings
-        const url = await SpeechService.textToSpeech(userSettings.apiKey!, processedContent, speechSettings);
+        // Pass the apiKey and openaiEndpoint from userSettings
+        const url = await SpeechService.textToSpeech(userSettings.apiKey!, processedContent, speechSettings, userSettings.openaiEndpoint);
         audioRef.current.src = url;
         setAudioUrl(url);
         setLastIdentifier(currentIdentifier);
@@ -63,6 +65,11 @@ const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({content}) => {
           setIsPlaying(true);
         };
       } catch (error) {
+        if (error instanceof CustomError && error.responseJson === 'INVALID_ENDPOINT') {
+          NotificationService.handleError('Invalid endpoint or network error', 'Failed to fetch audio');
+        } else {
+          NotificationService.handleUnexpectedError(error as Error, 'Failed to fetch audio');
+        }
         console.error('Error fetching audio:', error);
       } finally {
         setIsLoading(false);
@@ -88,35 +95,35 @@ const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({content}) => {
   }, []);
 
   return (
-      <button onClick={handleClick} disabled={isLoading}
-              className={`chat-action-button text-gray-400 inline-flex items-center justify-center p-2 ${
-                  isLoading || isPlaying ? 'active' : ''
-              }`}>
-        {isLoading ? (
-          <Tooltip title={t('loading-ttd-button')} side="top" sideOffset={0}>
-            <div>
-              <RotatingLines
-                ariaLabel="loading-indicator"
-                width="16"
-                strokeWidth="1"
-                strokeColor="black"
-              />
-            </div>
-          </Tooltip>
-        ) : isPlaying ? (
-          <Tooltip title={t('stop-read-aloud-button')} side="top" sideOffset={0}>
-            <div>{/* Tooltip requires a DOM element.*/}
-              <StopCircleIcon {...iconProps} />
-            </div>
-          </Tooltip>
-        ) : (
-          <Tooltip title={t('read-aloud-button')} side="top" sideOffset={0}>
-            <div>{/* Tooltip requires a DOM element.*/}
-              <SpeakerWaveIcon {...iconProps} />
-            </div>
-          </Tooltip>
-        )}
-      </button>
+    <button onClick={handleClick} disabled={isLoading}
+      className={`chat-action-button text-gray-400 inline-flex items-center justify-center p-2 ${
+        isLoading || isPlaying ? 'active' : ''
+      }`}>
+      {isLoading ? (
+        <Tooltip title={t('loading-ttd-button')} side="top" sideOffset={0}>
+          <div>
+            <RotatingLines
+              ariaLabel="loading-indicator"
+              width="16"
+              strokeWidth="1"
+              strokeColor="black"
+            />
+          </div>
+        </Tooltip>
+      ) : isPlaying ? (
+        <Tooltip title={t('stop-read-aloud-button')} side="top" sideOffset={0}>
+          <div>{/* Tooltip requires a DOM element.*/}
+            <StopCircleIcon {...iconProps} />
+          </div>
+        </Tooltip>
+      ) : (
+        <Tooltip title={t('read-aloud-button')} side="top" sideOffset={0}>
+          <div>{/* Tooltip requires a DOM element.*/}
+            <SpeakerWaveIcon {...iconProps} />
+          </div>
+        </Tooltip>
+      )}
+    </button>
   );
 };
 

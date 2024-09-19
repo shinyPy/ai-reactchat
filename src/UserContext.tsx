@@ -12,6 +12,7 @@ interface UserSettings {
   speechVoice: string | null;
   speechSpeed: number | null;
   apiKey: string | null;
+  openaiEndpoint: string;
 }
 
 const defaultUserSettings: UserSettings = {
@@ -22,8 +23,10 @@ const defaultUserSettings: UserSettings = {
   speechModel: 'tts-1',
   speechVoice: 'echo',
   speechSpeed: 1.0,
-  apiKey: null
+  apiKey: null,
+  openaiEndpoint: 'https://app.oxyapi.uk'
 };
+
 
 const determineEffectiveTheme = (userTheme: UserTheme): Theme => {
   if (userTheme === 'system' || !userTheme) {
@@ -48,40 +51,27 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [userSettings, setUserSettings] = useState<UserSettings>(() => {
     const storedUserTheme = localStorage.getItem('theme');
     const userTheme: UserTheme = (storedUserTheme === 'light' || storedUserTheme === 'dark' || storedUserTheme === 'system') ? storedUserTheme : defaultUserSettings.userTheme;
-  
     const model = localStorage.getItem('defaultModel') || defaultUserSettings.model;
     const instructions = localStorage.getItem('defaultInstructions') || defaultUserSettings.instructions;
     const speechModel = localStorage.getItem('defaultSpeechModel') || defaultUserSettings.speechModel;
     const speechVoice = localStorage.getItem('defaultSpeechVoice') || defaultUserSettings.speechVoice;
-  
     const speechSpeedRaw = localStorage.getItem('defaultSpeechSpeed');
     const speechSpeed = speechSpeedRaw !== null ? Number(speechSpeedRaw) : defaultUserSettings.speechSpeed;
-  
     const apiKey = localStorage.getItem('apiKey') || defaultUserSettings.apiKey;
-  
+    const openaiEndpoint = localStorage.getItem('openaiEndpoint') || defaultUserSettings.openaiEndpoint;
     const effectiveTheme = determineEffectiveTheme(userTheme);
-  
     return {
-      userTheme: userTheme,
+      userTheme,
       theme: effectiveTheme,
       model,
       instructions,
       speechModel,
       speechVoice,
       speechSpeed,
-      apiKey
+      apiKey,
+      openaiEndpoint
     };
   });
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', mediaQueryChangeHandler);
-    updateTheme();
-
-    return () => {
-      mediaQuery.removeEventListener('change', mediaQueryChangeHandler);
-    };
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('theme', userSettings.userTheme);
@@ -106,7 +96,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     const newEffectiveTheme = determineEffectiveTheme(userSettings.userTheme);
     setUserSettings(prevSettings => ({...prevSettings, theme: newEffectiveTheme}));
-
     if (newEffectiveTheme === 'dark') {
       document.body.classList.add('dark');
     } else {
@@ -138,7 +127,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }
   }, [userSettings.speechSpeed]);
 
-  // New effect for API key
   useEffect(() => {
     if (userSettings.apiKey === null || userSettings.apiKey === '') {
       localStorage.removeItem('apiKey');
@@ -147,27 +135,13 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }
   }, [userSettings.apiKey]);
 
-  const mediaQueryChangeHandler = (e: MediaQueryListEvent) => {
-    const newSystemTheme: Theme = e.matches ? 'dark' : 'light';
-    if (userSettings.userTheme === 'system') {
-      setUserSettings((prevSettings) => ({
-        ...prevSettings,
-        theme: newSystemTheme,
-      }));
-    }
-  };
-
-  const updateTheme = () => {
-    const newEffectiveTheme = determineEffectiveTheme(userSettings.userTheme || 'system');
-    if (newEffectiveTheme !== userSettings.theme) {
-      setUserSettings((prevSettings) => ({...prevSettings, theme: newEffectiveTheme}));
-    }
-    if (newEffectiveTheme === 'dark') {
-      document.body.classList.add('dark');
+  useEffect(() => {
+    if (userSettings.openaiEndpoint === '') {
+      localStorage.removeItem('openaiEndpoint');
     } else {
-      document.body.classList.remove('dark');
+      localStorage.setItem('openaiEndpoint', userSettings.openaiEndpoint);
     }
-  };
+  }, [userSettings.openaiEndpoint]);
 
   return (
     <UserContext.Provider value={{userSettings, setUserSettings}}>

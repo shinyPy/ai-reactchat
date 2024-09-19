@@ -1,11 +1,8 @@
 import { modelDetails, OpenAIModel } from "../models/model";
 import { ChatCompletionMessage, ChatCompletionRequest, ChatMessage, ChatMessagePart } from "../models/ChatCompletion";
-import { OPENAI_API_KEY } from "../config";
 import { CustomError } from "./CustomError";
-import { CHAT_COMPLETIONS_ENDPOINT, MODELS_ENDPOINT } from "../constants/apiEndpoints";
 import { ChatSettings } from "../models/ChatSettings";
-import { CHAT_STREAM_DEBOUNCE_TIME, DEFAULT_MODEL } from "../constants/appConstants";
-import { NotificationService } from '../service/NotificationService';
+import { DEFAULT_MODEL } from "../constants/appConstants";
 import { FileDataRef } from "../models/FileData";
 
 export class ChatService {
@@ -15,9 +12,10 @@ export class ChatService {
   static async mapChatMessagesToCompletionMessages(
     apiKey: string,
     modelId: string,
-    messages: ChatMessage[]
+    messages: ChatMessage[],
+    openaiEndpoint: string
   ): Promise<ChatCompletionMessage[]> {
-    const model = await this.getModelById(apiKey, modelId);
+    const model = await this.getModelById(apiKey, modelId, openaiEndpoint);
     if (!model) {
       throw new Error(`Model with ID '${modelId}' not found`);
     }
@@ -54,7 +52,8 @@ export class ChatService {
     apiKey: string,
     chatSettings: ChatSettings,
     messages: ChatMessage[],
-    callback: (content: string, fileDataRef: FileDataRef[]) => void
+    callback: (content: string, fileDataRef: FileDataRef[]) => void,
+    openaiEndpoint: string
   ): Promise<void> {
     this.abortController = new AbortController();
 
@@ -63,13 +62,16 @@ export class ChatService {
       messages: await this.mapChatMessagesToCompletionMessages(
         apiKey,
         chatSettings.model ?? DEFAULT_MODEL,
-        messages
+        messages,
+        openaiEndpoint
       ),
       stream: true,
       temperature: chatSettings.temperature ?? undefined,
       top_p: chatSettings.top_p ?? undefined,
       seed: chatSettings.seed ?? undefined,
     };
+
+    const CHAT_COMPLETIONS_ENDPOINT = `${openaiEndpoint}/v1/chat/completions`;
 
     try {
       const response = await fetch(CHAT_COMPLETIONS_ENDPOINT, {
@@ -119,6 +121,11 @@ export class ChatService {
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
           console.log('Stream aborted');
+        } else if (error.message.includes('Failed to fetch')) {
+          throw new CustomError('Invalid endpoint or network error', {
+            code: 'INVALID_ENDPOINT',
+            status: 400
+          });
         } else {
           throw error;
         }
@@ -133,13 +140,13 @@ export class ChatService {
     this.abortController = null;
   }
 
-  static async getModels(apiKey: string): Promise<OpenAIModel[]> {
-    return this.fetchModels(apiKey);
+  static async getModels(apiKey: string, openaiEndpoint: string): Promise<OpenAIModel[]> {
+    return this.fetchModels(apiKey, openaiEndpoint);
   }
 
-  static async getModelById(apiKey: string, modelId: string): Promise<OpenAIModel | null> {
+  static async getModelById(apiKey: string, modelId: string, openaiEndpoint: string): Promise<OpenAIModel | null> {
     try {
-      const models = await this.getModels(apiKey);
+      const models = await this.getModels(apiKey, openaiEndpoint);
       const foundModel = models.find(model => model.id === modelId);
       if (!foundModel) {
         throw new CustomError(`Model with ID '${modelId}' not found.`, {
@@ -151,7 +158,7 @@ export class ChatService {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('Failed to get models:', error.message);
-        throw new CustomError('Error retrieving models.', {
+        throw new CustomError('Error retrieving models, maybe your endpoint is invalid?', {
           code: 'FETCH_MODELS_FAILED',
           status: (error as any).status || 500
         });
@@ -164,10 +171,12 @@ export class ChatService {
     }
   }
 
-  static async fetchModels(apiKey: string): Promise<OpenAIModel[]> {
+  static async fetchModels(apiKey: string, openaiEndpoint: string): Promise<OpenAIModel[]> {
     if (this.models !== null) {
       return this.models;
     }
+
+    const MODELS_ENDPOINT = `${openaiEndpoint}/v1/models`;
 
     try {
       const response = await fetch(MODELS_ENDPOINT, {
@@ -206,6 +215,12 @@ export class ChatService {
       this.models = Promise.resolve(models);
       return models;
     } catch (err) {
+      if (err instanceof Error && err.message.includes('Failed to fetch')) {
+        throw new CustomError('Invalid endpoint or network error', {
+          code: 'INVALID_ENDPOINT',
+          status: 400
+        });
+      }
       throw new Error(err instanceof Error ? err.message : String(err));
     }
   }

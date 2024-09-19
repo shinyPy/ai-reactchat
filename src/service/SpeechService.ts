@@ -1,13 +1,17 @@
-import {OpenAIModel} from "../models/model";
-import {CustomError} from "./CustomError";
-import {MODELS_ENDPOINT, TTS_ENDPOINT} from "../constants/apiEndpoints";
-import {SpeechSettings} from "../models/SpeechSettings"; // Adjust the path as necessary
+import { OpenAIModel } from "../models/model";
+import { CustomError } from "./CustomError";
+import { SpeechSettings } from "../models/SpeechSettings"; // Adjust the path as necessary
 
 export class SpeechService {
   private static models: Promise<OpenAIModel[]> | null = null;
 
-  static async textToSpeech(apiKey: string, text: string, settings: SpeechSettings): Promise<string> {
-    const endpoint = TTS_ENDPOINT;
+  static async textToSpeech(
+    apiKey: string,
+    text: string,
+    settings: SpeechSettings,
+    openaiEndpoint: string
+  ): Promise<string> {
+    const TTS_ENDPOINT = `${openaiEndpoint}/v1/audio/speech`;
     const headers = {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`,
@@ -29,29 +33,41 @@ export class SpeechService {
       response_format: "mp3",
     };
 
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(requestBody),
-    });
+    try {
+      const response = await fetch(TTS_ENDPOINT, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(requestBody),
+      });
 
-    if (!response.ok) {
-      const err = await response.json();
-      throw new CustomError(err.error.message, err);
+      if (!response.ok) {
+        const err = await response.json();
+        throw new CustomError(err.error.message, err);
+      }
+
+      const blob = await response.blob();
+      return URL.createObjectURL(blob);
+    } catch (err: any) {
+      if (err.message.includes('Failed to fetch')) {
+        throw new CustomError('Invalid endpoint or network error', {
+          code: 'INVALID_ENDPOINT',
+          status: 400
+        });
+      }
+      throw new Error(err.message || err);
     }
-
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
   }
 
-  static getModels = (apiKey: string): Promise<OpenAIModel[]> => {
-    return SpeechService.fetchModels(apiKey);
+  static getModels = (apiKey: string, openaiEndpoint: string): Promise<OpenAIModel[]> => {
+    return SpeechService.fetchModels(apiKey, openaiEndpoint);
   };
 
-  static async fetchModels(apiKey: string): Promise<OpenAIModel[]> {
+  static async fetchModels(apiKey: string, openaiEndpoint: string): Promise<OpenAIModel[]> {
     if (this.models !== null) {
       return this.models;
     }
+
+    const MODELS_ENDPOINT = `${openaiEndpoint}/v1/models`;
 
     try {
       const response = await fetch(MODELS_ENDPOINT, {
@@ -70,6 +86,12 @@ export class SpeechService {
       this.models = Promise.resolve(models);
       return models;
     } catch (err: any) {
+      if (err.message.includes('Failed to fetch')) {
+        throw new CustomError('Invalid endpoint or network error', {
+          code: 'INVALID_ENDPOINT',
+          status: 400
+        });
+      }
       throw new Error(err.message || err);
     }
   }

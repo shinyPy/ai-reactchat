@@ -238,6 +238,22 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({isVisible, onClose
                       </div>
                       <p>We do not store your API key. It is used to authenticate your requests to the OpenAI API.</p>
                     </div>
+                    <div className="flex items-center justify-between setting-panel">
+                    <label htmlFor="openaiEndpoint">{t('API Endpoint')}</label>
+                    <input
+                      type="text"
+                      id="openaiEndpoint"
+                      name="openaiEndpoint"
+                      value={userSettings.openaiEndpoint || ''}
+                      onChange={(e) => setUserSettings({
+                        ...userSettings,
+                        openaiEndpoint: e.target.value
+                      })}
+                      placeholder="eg: https://app.oxyapi.uk"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+
                   </div>
                   <div
                       className={`${activeTab === Tab.INSTRUCTIONS_TAB ? 'flex flex-col flex-1' : 'hidden'}`}>

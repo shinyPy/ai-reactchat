@@ -6,7 +6,12 @@ Hosted and edited to use localStorage api keys instead of env if you're too lazy
 also currently using [oxyapi](https://app.oxyapi.uk/)
 
 ### Future plan
-Support custom headers and endpoints
+Support custom headers and endpoints (already done with endpoints)
+Dynamic model selection 
+
+
+
+
 ## Goals
 * Provide the same features as [OpenAI ChatGPT](https://chat.openai.com/) and <!-- markdown-link-check-enable -->
 [OpenAI Playground](https://platform.openai.com/playground?mode=chat).
@@ -33,6 +38,11 @@ See [FEATURES.md](FEATURES.md) for details.
 2. Settings and then put your API Key in the general tab, it is saved in localStorage.
 3. enjoy chatting 
 
+you could change the endpoint too but the default is oxygen api
 ## Contributions
 
 All contributions are welcome. Feel free to open an issue or create a pull request.
+
+## Notes
+
+I hate typescript.
