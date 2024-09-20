@@ -6,8 +6,8 @@ Hosted and edited to use localStorage api keys instead of env if you're too lazy
 also currently using [oxyapi](https://app.oxyapi.uk/)
 
 ### Future plan
-Support custom headers and endpoints (already done with endpoints)
-Dynamic model selection 
+* Support custom headers and endpoints (already done with endpoints)
+* Dynamic model selection 
 
 
 
