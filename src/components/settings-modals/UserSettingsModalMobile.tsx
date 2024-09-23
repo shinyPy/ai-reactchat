@@ -20,9 +20,8 @@ import SpeechSpeedSlider from './SpeechSpeedSlider';
 import { useConfirmDialog } from '../dialogs/ConfirmDialog';
 import TextToSpeechButton from '../audio-related/TextToSpeechButton';
 import { DEFAULT_MODEL } from "../../constants/appConstants";
-import UserSettingsModalMobile from './UserSettingsModalMobile';
 
-interface UserSettingsModalProps {
+interface UserSettingsModalMobileProps {
   isVisible: boolean;
   onClose: () => void;
 }
@@ -38,7 +37,7 @@ const SAMPLE_AUDIO_TEXT =
   "The quick brown fox jumps over the lazy dog.\n" +
   "Sandy Sells Sea-Shells by the Sea-Shore.";
 
-const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
+const UserSettingsModalMobile: React.FC<UserSettingsModalMobileProps> = ({
   isVisible,
   onClose
 }) => {
@@ -157,14 +156,6 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
   const renderStorageInfo = (value?: number | string) =>
     value ?? t('non-applicable');
 
-  const isMobile = window.innerWidth <= 768;
-
-  if (isMobile) {
-    return (
-      <UserSettingsModalMobile isVisible={isVisible} onClose={onClose} />
-    );
-  }
-
   return (
     <Transition show={isVisible} as={React.Fragment}>
       <div className="absolute inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 px-4">
@@ -180,7 +171,7 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
           <div
             ref={dialogRef}
             className="flex flex-col bg-white dark:bg-gray-850 rounded-lg w-full max-w-md mx-auto overflow-hidden"
-            style={{ minHeight: "640px", minWidth: "43em" }}
+            style={{ minHeight: "640px", minWidth: "100%" }}
           >
             <div
               id="user-settings-header"
@@ -492,4 +483,4 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
   );
 };
 
-export default UserSettingsModal;
+export default UserSettingsModalMobile;
