@@ -8,6 +8,7 @@ also currently using [oxyapi](https://app.oxyapi.uk/)
 ### Future plan
 * Support custom headers and endpoints (already done with endpoints)
 * Dynamic model selection 
+* Regenerate, Edit, and Continue feature.
 
 
 

@@ -185,293 +185,278 @@ const UserSettingsModalMobile: React.FC<UserSettingsModalMobileProps> = ({
                 <XMarkIcon className="h-8 w-8" aria-hidden="true" />
               </button>
             </div>
-            <div id="user-settings-content" className="flex flex-1">
-              <div className="border-r border-gray-200 flex flex-col">
-                <div
-                  className={`cursor-pointer p-4 flex items-center ${
-                    activeTab === Tab.GENERAL_TAB
-                      ? 'bg-gray-200 dark:bg-gray-700'
-                      : ''
-                  }`}
-                  onClick={() => setActiveTab(Tab.GENERAL_TAB)}
-                >
-                  <Cog6ToothIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                  {t('general-tab')}
-                </div>
-                <div
-                  className={`cursor-pointer p-4 flex items-center ${
-                    activeTab === Tab.INSTRUCTIONS_TAB
-                      ? 'bg-gray-200 dark:bg-gray-700'
-                      : ''
-                  }`}
-                  onClick={() => setActiveTab(Tab.INSTRUCTIONS_TAB)}
-                >
-                  <DocumentTextIcon
-                    className="w-4 h-4 mr-3"
-                    aria-hidden="true"
-                  />
-                  {t('instructions-tab')}
-                </div>
-                <div
-                  className={`cursor-pointer p-4 flex items-center ${
-                    activeTab === Tab.SPEECH_TAB
-                      ? 'bg-gray-200 dark:bg-gray-700'
-                      : ''
-                  }`}
-                  onClick={() => setActiveTab(Tab.SPEECH_TAB)}
-                >
-                  <SpeakerWaveIcon
-                    className="w-4 h-4 mr-3"
-                    aria-hidden="true"
-                  />
-                  {t('speech-tab')}
-                </div>
-                <div
-                  className={`cursor-pointer p-4 flex items-center ${
-                    activeTab === Tab.STORAGE_TAB
-                      ? 'bg-gray-200 dark:bg-gray-700'
-                      : ''
-                  }`}
-                  onClick={() => setActiveTab(Tab.STORAGE_TAB)}
-                >
-                  <CircleStackIcon
-                    className="w-4 h-4 mr-3"
-                    aria-hidden="true"
-                  />
-                  {t('storage-tab')}
-                </div>
+            <div className="flex justify-around border-b border-gray-200">
+              <div
+                className={`cursor-pointer p-4 ${
+                  activeTab === Tab.GENERAL_TAB
+                    ? 'bg-gray-200 dark:bg-gray-700'
+                    : ''
+                }`}
+                onClick={() => setActiveTab(Tab.GENERAL_TAB)}
+              >
+                <Cog6ToothIcon className="w-4 h-4" aria-hidden="true" />
               </div>
-              <div className="flex-1 p-4 flex flex-col">
-                <div
-                  className={`${
-                    activeTab === Tab.GENERAL_TAB
-                      ? 'flex flex-col flex-1'
-                      : 'hidden'
-                  }`}
-                >
-                  <div className="border-b border-token-border-light pb-3 last-of-type:border-b-0">
-                    <div className="flex items-center justify-between setting-panel">
-                      <label htmlFor="theme">{t('theme-label')}</label>
-                      <select
-                        id="theme"
-                        name="theme"
-                        className="custom-select dark:custom-select border-gray-300 border rounded p-2 dark:bg-gray-800 dark:text-white dark:border-gray-600"
-                        value={userSettings.userTheme}
-                        onChange={e => {
-                          setUserSettings({
-                            ...userSettings,
-                            userTheme: e.target.value as Theme
-                          });
-                        }}
-                      >
-                        <option value="dark">{t('dark-option')}</option>
-                        <option value="light">{t('light-option')}</option>
-                        <option value="system">{t('system-option')}</option>
-                      </select>
-                    </div>
-                    <div className="flex items-center justify-between setting-panel">
-                      {userSettings.model ? (
-                        <label htmlFor="model">{t('model-header')}</label>
-                      ) : (
-                        <span>{t('model-header')}</span>
-                      )}
-                      <EditableField<string | null>
-                        readOnly={false}
-                        id="model"
-                        label=""
-                        value={userSettings.model}
-                        defaultValue={null}
-                        defaultValueLabel={DEFAULT_MODEL}
-                        editorComponent={props => (
-                          <ModelSelect
-                            value={userSettings.model}
-                            onModelSelect={props.onValueChange}
-                            models={[]}
-                            allowNone={true}
-                            allowNoneLabel="Default"
-                          />
-                        )}
-                        onValueChange={(value: string | null) => {
-                          setUserSettings({ ...userSettings, model: value });
-                        }}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between setting-panel">
-                      <label htmlFor="apiKey">{t('API KEY HERE')}</label>
-                      <input
-                        type="password"
-                        id="apiKey"
-                        name="apiKey"
-                        value={userSettings.apiKey || ''}
-                        onChange={e =>
-                          setUserSettings({
-                            ...userSettings,
-                            apiKey: e.target.value
-                          })
-                        }
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      />
-                    </div>
-                    <p>
-                      We do not store your API key. It is used to authenticate
-                      your requests to the OpenAI API.
-                    </p>
+              <div
+                className={`cursor-pointer p-4 ${
+                  activeTab === Tab.INSTRUCTIONS_TAB
+                    ? 'bg-gray-200 dark:bg-gray-700'
+                    : ''
+                }`}
+                onClick={() => setActiveTab(Tab.INSTRUCTIONS_TAB)}
+              >
+                <DocumentTextIcon className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <div
+                className={`cursor-pointer p-4 ${
+                  activeTab === Tab.SPEECH_TAB
+                    ? 'bg-gray-200 dark:bg-gray-700'
+                    : ''
+                }`}
+                onClick={() => setActiveTab(Tab.SPEECH_TAB)}
+              >
+                <SpeakerWaveIcon className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <div
+                className={`cursor-pointer p-4 ${
+                  activeTab === Tab.STORAGE_TAB
+                    ? 'bg-gray-200 dark:bg-gray-700'
+                    : ''
+                }`}
+                onClick={() => setActiveTab(Tab.STORAGE_TAB)}
+              >
+                <CircleStackIcon className="w-4 h-4" aria-hidden="true" />
+              </div>
+            </div>
+            <div id="user-settings-content" className="flex-1 p-4 flex flex-col">
+              <div
+                className={`${
+                  activeTab === Tab.GENERAL_TAB
+                    ? 'flex flex-col flex-1'
+                    : 'hidden'
+                }`}
+              >
+                <div className="border-b border-token-border-light pb-3 last-of-type:border-b-0">
+                  <div className="flex items-center justify-between setting-panel">
+                    <label htmlFor="theme">{t('theme-label')}</label>
+                    <select
+                      id="theme"
+                      name="theme"
+                      className="custom-select dark:custom-select border-gray-300 border rounded p-2 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                      value={userSettings.userTheme}
+                      onChange={e => {
+                        setUserSettings({
+                          ...userSettings,
+                          userTheme: e.target.value as Theme
+                        });
+                      }}
+                    >
+                      <option value="dark">{t('dark-option')}</option>
+                      <option value="light">{t('light-option')}</option>
+                      <option value="system">{t('system-option')}</option>
+                    </select>
                   </div>
                   <div className="flex items-center justify-between setting-panel">
-                    <label htmlFor="openaiEndpoint">{t('API Endpoint')}</label>
+                    {userSettings.model ? (
+                      <label htmlFor="model">{t('model-header')}</label>
+                    ) : (
+                      <span>{t('model-header')}</span>
+                    )}
+                    <EditableField<string | null>
+                      readOnly={false}
+                      id="model"
+                      label=""
+                      value={userSettings.model}
+                      defaultValue={null}
+                      defaultValueLabel={DEFAULT_MODEL}
+                      editorComponent={props => (
+                        <ModelSelect
+                          value={userSettings.model}
+                          onModelSelect={props.onValueChange}
+                          models={[]}
+                          allowNone={true}
+                          allowNoneLabel="Default"
+                        />
+                      )}
+                      onValueChange={(value: string | null) => {
+                        setUserSettings({ ...userSettings, model: value });
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between setting-panel">
+                    <label htmlFor="apiKey">{t('API KEY HERE')}</label>
                     <input
-                      type="text"
-                      id="openaiEndpoint"
-                      name="openaiEndpoint"
-                      value={userSettings.openaiEndpoint || ''}
+                      type="password"
+                      id="apiKey"
+                      name="apiKey"
+                      value={userSettings.apiKey || ''}
                       onChange={e =>
                         setUserSettings({
                           ...userSettings,
-                          openaiEndpoint: e.target.value
+                          apiKey: e.target.value
                         })
                       }
-                      placeholder="eg: https://app.oxyapi.uk"
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     />
                   </div>
+                  <p>
+                    We do not store your API key. It is used to authenticate
+                    your requests to the OpenAI API.
+                  </p>
                 </div>
-                <div
-                  className={`${
-                    activeTab === Tab.INSTRUCTIONS_TAB
-                      ? 'flex flex-col flex-1'
-                      : 'hidden'
-                  }`}
-                >
-                  <div className="flex flex-col flex-1 border-b border-token-border-light pb-3 last-of-type:border-b-0">
-                    <EditableInstructions
-                      ref={editableInstructionsRef}
-                      initialValue={userSettings.instructions}
-                      placeholder={OPENAI_DEFAULT_SYSTEM_PROMPT}
-                      onChange={text => {
-                        // setUserSettings({...userSettings, instructions: text});
-                      }}
-                      className="flex flex-col h-full"
+                <div className="flex items-center justify-between setting-panel">
+                  <label htmlFor="openaiEndpoint">{t('API Endpoint')}</label>
+                  <input
+                    type="text"
+                    id="openaiEndpoint"
+                    name="openaiEndpoint"
+                    value={userSettings.openaiEndpoint || ''}
+                    onChange={e =>
+                      setUserSettings({
+                        ...userSettings,
+                        openaiEndpoint: e.target.value
+                      })
+                    }
+                    placeholder="eg: https://app.oxyapi.uk"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${
+                  activeTab === Tab.INSTRUCTIONS_TAB
+                    ? 'flex flex-col flex-1'
+                    : 'hidden'
+                }`}
+              >
+                <div className="flex flex-col flex-1 border-b border-token-border-light pb-3 last-of-type:border-b-0">
+                  <EditableInstructions
+                    ref={editableInstructionsRef}
+                    initialValue={userSettings.instructions}
+                    placeholder={OPENAI_DEFAULT_SYSTEM_PROMPT}
+                    onChange={text => {
+                      // setUserSettings({...userSettings, instructions: text});
+                    }}
+                    className="flex flex-col h-full"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${
+                  activeTab === Tab.SPEECH_TAB
+                    ? 'flex flex-col flex-1'
+                    : 'hidden'
+                }`}
+              >
+                <div className="flex flex-col flex-1">
+                  <div className="setting-panel flex justify-between">
+                    <label htmlFor="speech-model">{t('model-header')}</label>
+                    <select
+                      id="speech-model"
+                      className="custom-select dark:custom-select border-gray-300 border rounded p-2 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                      value={userSettings.speechModel || undefined}
+                      onChange={e =>
+                        setUserSettings({
+                          ...userSettings,
+                          speechModel: e.target.value
+                        })
+                      }
+                    >
+                      <option value="tts-1">tts-1</option>
+                      <option value="tts-1-hd">tts-1-hd</option>
+                    </select>
+                  </div>
+                  <div className="setting-panel flex justify-between">
+                    <label htmlFor="voice">{t('voice-header')}</label>
+                    <select
+                      id="voice"
+                      className="custom-select dark:custom-select border-gray-300 border rounded p-2 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                      value={userSettings.speechVoice || undefined}
+                      onChange={e =>
+                        setUserSettings({
+                          ...userSettings,
+                          speechVoice: e.target.value
+                        })
+                      }
+                    >
+                      <option value="alloy">Alloy</option>
+                      <option value="echo">Echo</option>
+                      <option value="fable">Fable</option>
+                      <option value="onyx">Onyx</option>
+                      <option value="nova">Nova</option>
+                      <option value="shimmer">Shimmer</option>
+                    </select>
+                  </div>
+                  <div className="setting-panel flex items-center justify-between">
+                    {userSettings.speechSpeed ? (
+                      <label htmlFor="speed" className="mr-4">
+                        {t('speed-header')}
+                      </label>
+                    ) : (
+                      <span className="mr-4">{t('speed-header')}</span>
+                    )}
+                    <EditableField<number | null>
+                      readOnly={false}
+                      id="speed"
+                      label=""
+                      value={userSettings.speechSpeed}
+                      defaultValue={1.0}
+                      defaultValueLabel="1.0"
+                      editorComponent={SpeechSpeedSlider}
+                      onValueChange={(value: number | null) =>
+                        setUserSettings({
+                          ...userSettings,
+                          speechSpeed: value
+                        })
+                      }
                     />
                   </div>
-                </div>
-                <div
-                  className={`${
-                    activeTab === Tab.SPEECH_TAB
-                      ? 'flex flex-col flex-1'
-                      : 'hidden'
-                  }`}
-                >
-                  <div className="flex flex-col flex-1">
-                    <div className="setting-panel flex justify-between">
-                      <label htmlFor="speech-model">{t('model-header')}</label>
-                      <select
-                        id="speech-model"
-                        className="custom-select dark:custom-select border-gray-300 border rounded p-2 dark:bg-gray-800 dark:text-white dark:border-gray-600"
-                        value={userSettings.speechModel || undefined}
-                        onChange={e =>
-                          setUserSettings({
-                            ...userSettings,
-                            speechModel: e.target.value
-                          })
-                        }
-                      >
-                        <option value="tts-1">tts-1</option>
-                        <option value="tts-1-hd">tts-1-hd</option>
-                      </select>
-                    </div>
-                    <div className="setting-panel flex justify-between">
-                      <label htmlFor="voice">{t('voice-header')}</label>
-                      <select
-                        id="voice"
-                        className="custom-select dark:custom-select border-gray-300 border rounded p-2 dark:bg-gray-800 dark:text-white dark:border-gray-600"
-                        value={userSettings.speechVoice || undefined}
-                        onChange={e =>
-                          setUserSettings({
-                            ...userSettings,
-                            speechVoice: e.target.value
-                          })
-                        }
-                      >
-                        <option value="alloy">Alloy</option>
-                        <option value="echo">Echo</option>
-                        <option value="fable">Fable</option>
-                        <option value="onyx">Onyx</option>
-                        <option value="nova">Nova</option>
-                        <option value="shimmer">Shimmer</option>
-                      </select>
-                    </div>
-                    <div className="setting-panel flex items-center justify-between">
-                      {userSettings.speechSpeed ? (
-                        <label htmlFor="speed" className="mr-4">
-                          {t('speed-header')}
-                        </label>
-                      ) : (
-                        <span className="mr-4">{t('speed-header')}</span>
-                      )}
-                      <EditableField<number | null>
-                        readOnly={false}
-                        id="speed"
-                        label=""
-                        value={userSettings.speechSpeed}
-                        defaultValue={1.0}
-                        defaultValueLabel="1.0"
-                        editorComponent={SpeechSpeedSlider}
-                        onValueChange={(value: number | null) =>
-                          setUserSettings({
-                            ...userSettings,
-                            speechSpeed: value
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="setting-panel">
-                      <label htmlFor="tts-test-area">
-                        {t('tts-test-label')}
-                      </label>
-                      <textarea
-                        id="tts-test-area"
-                        rows={2}
-                        className="shadow-sm p-2 mt-1 block w-full dark:text-gray-300 dark:bg-gray-700 sm:text-sm border border-gray-300 rounded-md"
-                        defaultValue={ttsText}
-                        onChange={e => setTtsText(e.target.value)}
-                      ></textarea>
-                      <TextToSpeechButton content={ttsText} />
-                    </div>
+                  <div className="setting-panel">
+                    <label htmlFor="tts-test-area">
+                      {t('tts-test-label')}
+                    </label>
+                    <textarea
+                      id="tts-test-area"
+                      rows={2}
+                      className="shadow-sm p-2 mt-1 block w-full dark:text-gray-300 dark:bg-gray-700 sm:text-sm border border-gray-300 rounded-md"
+                      defaultValue={ttsText}
+                      onChange={e => setTtsText(e.target.value)}
+                    ></textarea>
+                    <TextToSpeechButton content={ttsText} />
                   </div>
                 </div>
-                <div
-                  className={`${
-                    activeTab === Tab.STORAGE_TAB
-                      ? 'flex flex-col flex-1'
-                      : 'hidden'
-                  }`}
-                >
-                  <h3 className="text-lg mb-4">{t('storage-header')}</h3>
-                  <div className="setting-panel">
-                    <p>Chats are stored locally in your browser's IndexedDB.</p>
-                    <p>
-                      Usage: {`${renderStorageInfo(
-                        formatBytesToMB(storageUsage)
-                      )} of
+              </div>
+              <div
+                className={`${
+                  activeTab === Tab.STORAGE_TAB
+                    ? 'flex flex-col flex-1'
+                    : 'hidden'
+                }`}
+              >
+                <h3 className="text-lg mb-4">{t('storage-header')}</h3>
+                <div className="setting-panel">
+                  <p>Chats are stored locally in your browser's IndexedDB.</p>
+                  <p>
+                    Usage: {`${renderStorageInfo(
+                      formatBytesToMB(storageUsage)
+                    )} of
                     ${renderStorageInfo(formatBytesToMB(storageQuota))}
                     (${renderStorageInfo(
-                        percentageUsed
-                          ? `${percentageUsed.toFixed(2)}%`
-                          : undefined
-                      )})`}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between setting-panel">
-                    <span>{''}</span>
-                    <div>
-                      <button
-                        onClick={handleDeleteAllConversations}
-                        className="mt-4 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700"
-                      >
-                        {t('delete-all-chats-button')}
-                      </button>
-                      {ConfirmDialog}
-                    </div>
+                      percentageUsed
+                        ? `${percentageUsed.toFixed(2)}%`
+                        : undefined
+                    )})`}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between setting-panel">
+                  <span>{''}</span>
+                  <div>
+                    <button
+                      onClick={handleDeleteAllConversations}
+                      className="mt-4 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700"
+                    >
+                      {t('delete-all-chats-button')}
+                    </button>
+                    {ConfirmDialog}
                   </div>
                 </div>
               </div>
