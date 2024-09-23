@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {Cog8ToothIcon, PlusIcon, Squares2X2Icon} from "@heroicons/react/24/outline";
 import {CloseSideBarIcon, iconProps, OpenSideBarIcon} from "../../svg";
@@ -18,6 +18,25 @@ const Sidebar: React.FC<SidebarProps> = ({className, isSidebarCollapsed, toggleS
   const {t} = useTranslation();
   const navigate = useNavigate();
   const [isSettingsModalVisible, setSettingsModalVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(isSidebarCollapsed);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsCollapsed(true);
+    } else {
+      setIsCollapsed(isSidebarCollapsed);
+    }
+  }, [isMobile, isSidebarCollapsed]);
 
   const openSettingsDialog = () => {
     setSettingsModalVisible(true);
@@ -31,16 +50,23 @@ const Sidebar: React.FC<SidebarProps> = ({className, isSidebarCollapsed, toggleS
     setSettingsModalVisible(false);
   }
 
+  const handleToggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+    if (!isMobile) {
+      toggleSidebarCollapse();
+    }
+  }
+
   return (
-    <div className={`${className} ${isSidebarCollapsed ? 'w-0' : 'w-auto'}`}>
-      {isSidebarCollapsed && (
-        <div className="absolute top-0 left-0 z-50">
+    <div className={`${className} ${isCollapsed ? 'w-0' : 'w-auto'}`}>
+      {isCollapsed && (
+        <div className="absolute top-0 left-0 z-50" style={{ top: isMobile ? '50px' : '0' }}>
           <Tooltip title={t('open-sidebar')} side="right" sideOffset={10}>
             <button
               className="flex px-3 min-h-[44px] py-1 gap-3 transition-colors duration-200 dark:text-white
               cursor-pointer text-sm rounded-md border dark:border-white/20 hover:bg-gray-300 dark:hover:bg-gray-600
               h-11 w-11 flex-shrink-0 items-center justify-center bg-white dark:bg-transparent"
-              onClick={toggleSidebarCollapse}>
+              onClick={handleToggleSidebar}>
               <OpenSideBarIcon/>
             </button>
           </Tooltip>
@@ -50,7 +76,6 @@ const Sidebar: React.FC<SidebarProps> = ({className, isSidebarCollapsed, toggleS
         isVisible={isSettingsModalVisible}
         onClose={handleOnClose}
       />
-      {/* sidebar is always dark mode*/}
       <div
         className="sidebar duration-500 transition-all h-full flex-shrink-0 overflow-x-hidden dark:bg-gray-900">
         <div className="h-full w-[260px]">
@@ -84,7 +109,7 @@ const Sidebar: React.FC<SidebarProps> = ({className, isSidebarCollapsed, toggleS
                       className="flex px-3 min-h-[44px] py-1 gap-3 transition-colors duration-200 dark:text-white
                       cursor-pointer text-sm rounded-md border dark:border-white/20 hover:bg-gray-500/10
                       h-11 w-11 flex-shrink-0 items-center justify-center bg-white dark:bg-transparent"
-                      onClick={toggleSidebarCollapse}
+                      onClick={handleToggleSidebar}
                       type="button"
                     >
                       <CloseSideBarIcon/>
