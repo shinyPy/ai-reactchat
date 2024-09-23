@@ -127,12 +127,12 @@ const Sidebar: React.FC<SidebarProps> = ({className, isSidebarCollapsed, toggleS
             </div>
           </div>
         </div>
-      </div>
         <div className="absolute bottom-0 left-0 p-4 border-t dark:border-white/20">
           <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
             <span>© Modified by <a href="https://github.com/shinyPy" target="_blank" style={{color: 'blue', fontWeight: 'bold'}} rel="noopener noreferrer">shinyPy</a></span>
           </div>
         </div>
+      </div>
     </div>
   );
 }
