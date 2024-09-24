@@ -39,6 +39,23 @@ See [FEATURES.md](FEATURES.md) for details.
 3. enjoy chatting 
 
 you could change the endpoint too but the default is oxygen api
+
+## Development
+
+1. Clone the repository.
+```
+git clone https://github.com/shinyPy/openai-react-chat.git
+```
+2. And cd into the directory
+```
+cd openai-react-chat
+```
+4. Build & Run the web server
+```
+npm install
+npm run start
+```
+The local website [http://localhost:3000/](http://localhost:3000/) should open in your browser.
 ## Contributions
 
 All contributions are welcome. Feel free to open an issue or create a pull request.
