@@ -2,12 +2,11 @@
 <!-- markdown-link-check-disable -->
 This project provides a web frontend for the OpenAI chat API. This project is for developers or advanced users that are familiar with [OpenAI ChatGPT](https://chat.openai.com/) but want to customize the web interface.
 
-Hosted and edited to use localStorage api keys instead of env if you're too lazy to run it on your computer
-also currently using [oxyapi](https://app.oxyapi.uk/)
+Hosted and edited to use localStorage api keys instead of env if you're too lazy to run it on your computer.
 
 ### Future plan
-* Support custom headers and endpoints (already done with endpoints)
-* Dynamic model selection 
+* Support custom headers and endpoints (already done with endpoints).
+* Dynamic model selection.
 * Regenerate, Edit, and Continue feature.
 
 
@@ -30,7 +29,7 @@ See [FEATURES.md](FEATURES.md) for details.
 
 ## Requirements
 
-* [Oxygen API Account](https://app.oxyapi.uk/)
+* [Oxygen API Account](https://www.oxyapi.uk/auth/login)
 
 
 ## Setup
