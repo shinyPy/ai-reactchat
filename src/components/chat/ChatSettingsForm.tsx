@@ -1,14 +1,14 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import AvatarFieldEditor, {ImageSource} from "../settings-modals/AvatarFieldEditor";
+import AvatarFieldEditor, {ImageSource} from "../settings/AvatarFieldEditor";
 import 'rc-slider/assets/index.css';
-import ModelSelect from '../settings-modals/ModelSelect';
-import TemperatureSlider from '../settings-modals/TemperatureSlider';
-import TopPSlider from '../settings-modals/TopPSlider';
+import ModelSelect from '../settings/ModelSelect';
+import TemperatureSlider from '../settings/TemperatureSlider';
+import TopPSlider from '../settings/TopPSlider';
 import {ChatSettings} from '../../models/ChatSettings';
-import {EditableField} from '../ui-elements/EditableField';
+import {EditableField} from '../ui/EditableField';
 import {useTranslation} from 'react-i18next';
 import {NotificationService} from "../../service/NotificationService";
-import FormLabel from "../ui-elements/FormLabel";
+import FormLabel from "../ui/FormLabel";
 import {DEFAULT_MODEL} from "../../constants/appConstants";
 
 interface ChatSettingsFormProps {

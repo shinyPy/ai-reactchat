@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import FormLabel from "../ui-elements/FormLabel";
+import FormLabel from "../ui/FormLabel";
 import {useTranslation} from 'react-i18next';
 
 export interface ImageSource {

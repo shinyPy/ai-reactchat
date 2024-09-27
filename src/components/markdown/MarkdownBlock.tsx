@@ -5,7 +5,7 @@ import "../css/MarkdownBlock.css";
 
 // import SyntaxHighlighter from 'react-syntax-highlighter';
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
-import CopyButton from "../ui-elements/CopyButton";
+import CopyButton from "../ui/CopyButton";
 import {Root} from "hast";
 import gfm from "remark-gfm";
 import "github-markdown-css/github-markdown.css";

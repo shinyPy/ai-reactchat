@@ -11,12 +11,12 @@ import Select, {
 import {OpenAIModel} from '../../models/model';
 import {ChatService} from '../../service/ChatService';
 import {useTranslation} from 'react-i18next';
-import Tooltip from "../ui-elements/Tooltip";
+import Tooltip from "../ui/Tooltip";
 import {DEFAULT_MODEL} from "../../constants/appConstants";
 import '../css/ModelSelect.css'
 import {UserContext} from "../../UserContext";
 import {EyeIcon} from '@heroicons/react/24/outline';
-import AnchoredHint from '../markdown-text/AnchoredHint';
+import AnchoredHint from '../markdown/AnchoredHint';
 
 interface ModelSelectProps {
   onModelSelect?: (value: string | null) => void;

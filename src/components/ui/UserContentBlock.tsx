@@ -1,6 +1,6 @@
 import React from 'react';
 import {SNIPPET_MARKERS} from "../../constants/appConstants";
-import FoldableTextSection from '../markdown-text/FoldableTextSection';
+import FoldableTextSection from '../markdown/FoldableTextSection';
 import { FileData, FileDataRef } from '../../models/FileData';
 import FileDataPreview from '../file-related/FileDataPreview';
 

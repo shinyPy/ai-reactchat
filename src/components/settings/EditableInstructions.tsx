@@ -1,7 +1,7 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import {ArrowsPointingOutIcon} from "@heroicons/react/24/outline";
 import {iconProps} from "../../svg";
-import Button from '../ui-elements/Button';
+import Button from '../ui/Button';
 import {useTranslation} from 'react-i18next';
 
 interface EditableInstructionsProps {

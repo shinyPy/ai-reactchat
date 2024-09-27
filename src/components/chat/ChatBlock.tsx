@@ -1,10 +1,10 @@
 import React, {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from 'react';
 import {SparklesIcon, UserCircleIcon} from "@heroicons/react/24/outline";
-import MarkdownBlock from '../markdown-text/MarkdownBlock';
-import CopyButton, {CopyButtonMode} from "../ui-elements/CopyButton";
+import MarkdownBlock from '../markdown/MarkdownBlock';
+import CopyButton, {CopyButtonMode} from "../ui/CopyButton";
 import {ChatMessage, MessageType} from "../../models/ChatCompletion";
-import UserContentBlock from "../ui-elements/UserContentBlock";
-import TextToSpeechButton from "../audio-related/TextToSpeechButton";
+import UserContentBlock from "../ui/UserContentBlock";
+import TextToSpeechButton from "../audio/TextToSpeechButton";
 
 interface Props {
   block: ChatMessage;

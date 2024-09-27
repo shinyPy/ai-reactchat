@@ -6,8 +6,8 @@ import Sidebar from "./components/core/SideBar";
 import MainPage from "./components/core/MainPage";
 import './App.css';
 import {ToastContainer} from "react-toastify";
-import ExploreCustomChats from "./components/chat-related/ExploreCustomChats";
-import CustomChatEditor from './components/chat-related/CustomChatEditor';
+import ExploreCustomChats from "./components/chat/ExploreCustomChats";
+import CustomChatEditor from './components/chat/CustomChatEditor';
 
 const App = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

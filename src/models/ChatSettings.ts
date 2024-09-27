@@ -1,4 +1,4 @@
-import {ImageSource} from "../components/settings-modals/AvatarFieldEditor";
+import {ImageSource} from "../components/settings/AvatarFieldEditor";
 
 export interface ChatSettings {
   id: number;

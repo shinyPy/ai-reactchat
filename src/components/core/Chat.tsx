@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import ChatBlock from "../chat-related/ChatBlock";
-import ModelSelect from "../settings-modals/ModelSelect";
+import ChatBlock from "../chat/ChatBlock";
+import ModelSelect from "../settings/ModelSelect";
 import { OpenAIModel } from "../../models/model";
 import { ChatService } from "../../service/ChatService";
 import { ChatMessage } from "../../models/ChatCompletion";
 import { useTranslation } from 'react-i18next';
-import Tooltip from "../ui-elements/Tooltip";
+import Tooltip from "../ui/Tooltip";
 import { Conversation } from "../../service/ConversationService";
 import { OPENAI_DEFAULT_SYSTEM_PROMPT } from "../../config";
 import { DEFAULT_INSTRUCTIONS } from "../../constants/appConstants";

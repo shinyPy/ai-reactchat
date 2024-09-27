@@ -20,7 +20,7 @@ import {SubmitButton} from "./SubmitButton";
 import {useTranslation} from 'react-i18next';
 import {ChatService} from "../../service/ChatService";
 import {PaperClipIcon, StopCircleIcon} from "@heroicons/react/24/outline";
-import Tooltip from "../ui-elements/Tooltip";
+import Tooltip from "../ui/Tooltip";
 import FileDataPreview from '../file-related/FileDataPreview';
 import {FileDataRef} from '../../models/FileData';
 import {preprocessImage} from '../../utils/ImageUtils';

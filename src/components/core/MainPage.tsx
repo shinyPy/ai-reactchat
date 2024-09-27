@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ChatService } from "../../service/ChatService";
 import Chat from "./Chat";
 import { ChatCompletion, ChatMessage, MessageType, Role } from "../../models/ChatCompletion";
-import { ScrollToBottomButton } from "../chat-related/ScrollToBottomButton";
+import { ScrollToBottomButton } from "../chat/ScrollToBottomButton";
 import { OPENAI_DEFAULT_SYSTEM_PROMPT } from "../../config";
 import { CustomError } from "../../service/CustomError";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom/client';
-import MessageBox, { MessageBoxHandles } from "../chat-related/MessageBox";
+import MessageBox, { MessageBoxHandles } from "../chat/MessageBox";
 import {
   CONVERSATION_NOT_FOUND,
   DEFAULT_INSTRUCTIONS,
@@ -18,11 +18,11 @@ import {
 } from "../../constants/appConstants";
 import { ChatSettings } from '../../models/ChatSettings';
 import chatSettingsDB, { chatSettingsEmitter, updateShowInSidebar } from '../../service/ChatSettingsDB';
-import ChatSettingDropdownMenu from "../chat-related/ChatSettingDropdownMenu";
+import ChatSettingDropdownMenu from "../chat/ChatSettingDropdownMenu";
 import ConversationService, { Conversation } from '../../service/ConversationService';
 import { UserContext } from '../../UserContext';
 import { NotificationService } from '../../service/NotificationService';
-import CustomChatSplash from '../chat-related/CustomChatSplash';
+import CustomChatSplash from '../chat/CustomChatSplash';
 import { FileDataRef } from '../../models/FileData';
 import { OpenAIModel } from '../../models/model';
 import { ArrowUturnDownIcon } from '@heroicons/react/24/outline';

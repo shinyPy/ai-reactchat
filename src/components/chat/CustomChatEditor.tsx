@@ -3,7 +3,7 @@ import {useLocation, useNavigate, useParams} from "react-router-dom";
 import ChatSettingsForm from "./ChatSettingsForm";
 import {ChatSettings} from "../../models/ChatSettings";
 import chatSettingsDB, {getChatSettingsById} from "../../service/ChatSettingsDB";
-import Button from "../ui-elements/Button";
+import Button from "../ui/Button";
 import {useTranslation} from 'react-i18next';
 
 const CustomChatEditor: React.FC = () => {

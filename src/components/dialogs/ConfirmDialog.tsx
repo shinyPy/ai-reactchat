@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import Button from '../ui-elements/Button';
+import Button from '../ui/Button';
 import ReactDOM from 'react-dom';
 
 interface DialogOptions {
@@ -22,16 +22,16 @@ interface ConfirmDialogProps {
 type UseDialogOptions = Omit<ConfirmDialogProps, 'isOpen'>;
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
-                                                       isOpen,
-                                                       message,
-                                                       confirmText,
-                                                       onConfirm,
-                                                       onCancel,
-                                                       confirmButtonVariant
-                                                     }) => {
-  if (!isOpen) {
-    return null;
-  }
+    isOpen,
+    message,
+    confirmText,
+    onConfirm,
+    onCancel,
+    confirmButtonVariant
+}) => {
+    if (!isOpen) {
+        return null;
+    }
 
   return ReactDOM.createPortal(
       (

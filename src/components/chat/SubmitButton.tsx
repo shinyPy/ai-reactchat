@@ -1,7 +1,7 @@
 import React from 'react';
 import {EllipsisHorizontalIcon, PaperAirplaneIcon} from '@heroicons/react/24/outline';
 import '../css/SubmitButton.css';
-import Tooltip from "../ui-elements/Tooltip";
+import Tooltip from "../ui/Tooltip";
 import {useTranslation} from 'react-i18next';
 
 interface SubmitButtonProps {

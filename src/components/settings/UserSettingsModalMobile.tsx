@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Theme, UserContext } from '../../UserContext';
 import ModelSelect from './ModelSelect';
-import { EditableField } from "../ui-elements/EditableField";
+import { EditableField } from "../ui/EditableField";
 import '../css/UserSettingsModal.css';
 import { OPENAI_DEFAULT_SYSTEM_PROMPT } from "../../config";
 import ConversationService from "../../service/ConversationService";
@@ -18,7 +18,7 @@ import { Transition } from '@headlessui/react';
 import EditableInstructions from './EditableInstructions';
 import SpeechSpeedSlider from './SpeechSpeedSlider';
 import { useConfirmDialog } from '../dialogs/ConfirmDialog';
-import TextToSpeechButton from '../audio-related/TextToSpeechButton';
+import TextToSpeechButton from '../audio/TextToSpeechButton';
 import { DEFAULT_MODEL } from "../../constants/appConstants";
 
 interface UserSettingsModalMobileProps {

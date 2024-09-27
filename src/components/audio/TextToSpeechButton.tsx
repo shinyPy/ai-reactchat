@@ -7,7 +7,7 @@ import { UserContext } from '../../UserContext';
 import { iconProps } from "../../svg";
 import { useTranslation } from "react-i18next";
 import "../css/Button.css";
-import Tooltip from '../ui-elements/Tooltip';
+import Tooltip from '../ui/Tooltip';
 import { NotificationService } from '../../service/NotificationService';
 import { CustomError } from '../../service/CustomError';
 

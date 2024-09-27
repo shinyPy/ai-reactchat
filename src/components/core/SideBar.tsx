@@ -3,10 +3,10 @@ import {Link, useNavigate} from 'react-router-dom';
 import {Cog8ToothIcon, PlusIcon, Squares2X2Icon} from "@heroicons/react/24/outline";
 import {CloseSideBarIcon, iconProps, OpenSideBarIcon} from "../../svg";
 import {useTranslation} from 'react-i18next';
-import Tooltip from "../ui-elements/Tooltip";
-import UserSettingsModal from '../settings-modals/UserSettingsModal';
-import ChatShortcuts from '../chat-related/ChatShortcuts';
-import ConversationList from "../chat-related/ConversationList";
+import Tooltip from "../ui/Tooltip";
+import UserSettingsModal from '../settings/UserSettingsModal';
+import ChatShortcuts from '../chat/ChatShortcuts';
+import ConversationList from "../chat/ConversationList";
 
 interface SidebarProps {
   className: string;

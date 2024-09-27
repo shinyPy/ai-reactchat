@@ -3,7 +3,7 @@ import {createPortal} from 'react-dom';
 import { NoSymbolIcon,XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { FileDataRef } from '../../models/FileData';
 import {useTranslation} from "react-i18next";
-import Tooltip from '../ui-elements/Tooltip';
+import Tooltip from '../ui/Tooltip';
 import '../css/FileDataPreview.css';
 import {IMAGE_MAX_ZOOM} from "../../constants/appConstants";
 
@@ -13,13 +13,12 @@ interface Props {
   readOnly?: boolean;
   allowImageAttachment?: boolean
 }
-
 const FileDataPreview: React.FC<Props> = ({
-                                            fileDataRef,
-                                            removeFileData,
-                                            readOnly = false,
-                                            allowImageAttachment = true
-                                          }) => {
+    fileDataRef,
+    removeFileData,
+    readOnly = false,
+    allowImageAttachment = true
+}) => {
   const {t} = useTranslation();
   const [viewedFileIndex, setViewedFileIndex] = useState<number | null>(null);
   const [imageStyle, setImageStyle] = useState<React.CSSProperties>({});
