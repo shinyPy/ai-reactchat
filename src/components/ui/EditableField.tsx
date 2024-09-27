@@ -21,20 +21,22 @@ export type EditableFieldProps<T> = {
 };
 
 export function EditableField<T>({
-                                   id,
-                                   label,
-                                   value,
-                                   defaultValue,
-                                   defaultValueLabel,
-                                   editorComponent: EditorComponent,
-                                   onValueChange,
-                                   readOnly,
-                                   isModalLabel,
-                                 }: EditableFieldProps<T>): ReactElement {
-  const [isEditing, setIsEditing] = useState(false);
-  const effectiveValue = value !== undefined && value !== null ? value : defaultValue;
-  const [tempValue, setTempValue] = useState<T>(effectiveValue);
-  const {t} = useTranslation();
+    id,
+    label,
+    value,
+    defaultValue,
+    defaultValueLabel,
+    editorComponent: EditorComponent,
+    onValueChange,
+    readOnly,
+    isModalLabel
+} : EditableFieldProps<T>): ReactElement {
+    const [isEditing, setIsEditing] = useState(false);
+    const effectiveValue = value !== undefined && value !== null
+        ? value
+        : defaultValue;
+    const [tempValue, setTempValue] = useState<T>(effectiveValue);
+    const {t} = useTranslation();
 
   const isValueSet = (): boolean => {
     return value !== undefined && value !== null;

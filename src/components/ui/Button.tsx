@@ -10,12 +10,12 @@ interface ButtonProps {
 }
 
 const Button: FC<ButtonProps> = ({
-                                   onClick,
-                                   children,
-                                   variant = 'primary',
-                                   className,
-                                   disabled = false,
-                                 }) => {
+    onClick,
+    children,
+    variant = 'primary',
+    className,
+    disabled = false
+}) => {
   const baseStyle = "py-2 px-4 rounded font-medium cursor-pointer";
   let variantStyle = "";
 
