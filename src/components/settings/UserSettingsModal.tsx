@@ -4,7 +4,9 @@ import {
   Cog6ToothIcon,
   DocumentTextIcon,
   SpeakerWaveIcon,
-  XMarkIcon
+  XMarkIcon,
+  EyeIcon,
+  EyeSlashIcon,
 } from "@heroicons/react/24/outline";
 import { Theme, UserContext } from '../../UserContext';
 import ModelSelect from './ModelSelect';
@@ -21,7 +23,6 @@ import { useConfirmDialog } from '../dialogs/ConfirmDialog';
 import TextToSpeechButton from '../audio/TextToSpeechButton';
 import { DEFAULT_MODEL } from "../../constants/appConstants";
 import UserSettingsModalMobile from './UserSettingsModalMobile';
-
 interface UserSettingsModalProps {
   isVisible: boolean;
   onClose: () => void;
@@ -42,6 +43,7 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
   isVisible,
   onClose
 }) => {
+  const [showApiKey, setShowApiKey] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const { userSettings, setUserSettings } = useContext(UserContext);
   const [activeTab, setActiveTab] = useState<Tab>(Tab.GENERAL_TAB);
@@ -306,24 +308,35 @@ const UserSettingsModal: React.FC<UserSettingsModalProps> = ({
                       />
                     </div>
                     <div className="flex items-center justify-between setting-panel">
-                      <label htmlFor="apiKey">{t('API KEY HERE')}</label>
-                      <input
-                        type="password"
-                        id="apiKey"
-                        name="apiKey"
-                        value={userSettings.apiKey || ''}
-                        onChange={e =>
-                          setUserSettings({
-                            ...userSettings,
-                            apiKey: e.target.value
-                          })
-                        }
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      />
-                    </div>
+                    <label htmlFor="apiKey">{t('api-key')}</label>
+                    <div className="relative w-full flex items-center">
+                    <input
+                      type={showApiKey ? 'text' : 'password'}
+                      id="apiKey"
+                      name="apiKey"
+                      value={userSettings.apiKey || ''}
+                      onChange={e =>
+                        setUserSettings({
+                          ...userSettings,
+                          apiKey: e.target.value
+                        })
+                      }
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-16"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowApiKey(!showApiKey)}
+                      className="absolute inset-y-0 right-0 px-3 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border-l border-gray-300 dark:border-gray-600"                    >
+                        {showApiKey ? (
+                          <EyeIcon className="h-5 w-5" />
+                        ) : (
+                          <EyeSlashIcon className="h-5 w-5" />
+                        )}
+                    </button>
+                  </div>
+                  </div>
                     <p>
-                      We do not store your API key. It is used to authenticate
-                      your requests to the OpenAI API.
+                      Your API Key is stored locally!
                     </p>
                   </div>
                   <div className="flex items-center justify-between setting-panel">
