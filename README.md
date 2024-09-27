@@ -34,7 +34,7 @@ See [FEATURES.md](FEATURES.md) for details.
 
 ## Setup
 
-1. Go to the [website]( https://openai-api-chat-teal.vercel.app/)
+1. Go to the [website](https://ai-api-chat.vercel.app/)
 2. Settings and then put your API Key in the general tab, it is saved in localStorage.
 3. enjoy chatting 
 
@@ -48,7 +48,7 @@ git clone https://github.com/shinyPy/ai-reactchat.git
 ```
 2. And cd into the directory
 ```
-cd openai-react-chat
+cd ai-reactchat
 ```
 4. Build & Run the web server
 ```
