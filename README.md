@@ -44,7 +44,7 @@ you could change the endpoint too but the default is oxygen api
 
 1. Clone the repository.
 ```
-git clone https://github.com/shinyPy/openai-react-chat.git
+git clone https://github.com/shinyPy/ai-reactchat.git
 ```
 2. And cd into the directory
 ```
