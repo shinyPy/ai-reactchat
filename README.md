@@ -29,8 +29,7 @@ See [FEATURES.md](FEATURES.md) for details.
 
 ## Requirements
 
-* [Oxygen API Account](https://www.oxyapi.uk/auth/login)
-* Or you can check the list of [API Here](https://github.com/zukixa/cool-ai-stuff) 
+* API Keys, you can check the list of [API Here](https://github.com/zukixa/cool-ai-stuff) 
 
 
 ## Setup
